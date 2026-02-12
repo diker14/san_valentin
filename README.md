@@ -1,1 +1,244 @@
-# san_valentin
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>San Valentín 💖</title>
+
+<style>
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#f5f5f5;
+    font-family:'Segoe UI', sans-serif;
+    overflow:hidden;
+    transition:0.8s;
+}
+
+body.activado{
+    background:linear-gradient(135deg,#ffd6f5,#ffe6f0);
+}
+
+/* TARJETA */
+.card{
+    width:90%;
+    max-width:350px;
+    padding:25px;
+    border-radius:25px;
+    border:4px solid #d633ff;
+    text-align:center;
+    background:white;
+    box-shadow:0 0 20px rgba(214,51,255,0.4);
+    position:relative;
+    z-index:2;
+}
+
+.image-box{
+    border:3px solid #d633ff;
+    border-radius:20px;
+    padding:10px;
+    margin-bottom:15px;
+}
+
+.image-box img{
+    width:100%;
+    border-radius:15px;
+    animation:flotar 4s ease-in-out infinite;
+}
+
+@keyframes flotar{
+    0%,100{ transform:translateY(0); }
+    50%{ transform:translateY(-10px); }
+}
+
+h2{
+    color:#ff2fa0;
+    font-family:cursive;
+    margin-bottom:20px;
+}
+
+/* BOTONES */
+.botones{
+    display:flex;
+    justify-content:space-around;
+    gap:15px;
+    margin-top:10px;
+}
+
+button{
+    padding:12px 20px;
+    border-radius:20px;
+    border:2px solid #d633ff;
+    background:white;
+    font-size:15px;
+    color:#d633ff;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    background:#ff66cc;
+    color:white;
+}
+
+#noBtn{
+    position:relative;
+}
+
+/* ROSAS */
+.rosas-container{
+    position:fixed;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    opacity:0;
+    visibility:hidden;
+    transition:0.8s;
+    z-index:3;
+    text-align:center;
+    padding:20px;
+}
+
+.rosas-container img{
+    width:80%;
+    max-width:320px;
+    animation:rosasAnim 3s ease-in-out infinite;
+}
+
+@keyframes rosasAnim{
+    0%,100%{ transform:translateY(0); }
+    50%{ transform:translateY(-15px); }
+}
+
+.rosas-container.mostrar{
+    opacity:1;
+    visibility:visible;
+}
+
+.mensaje{
+    margin-top:25px;
+    font-size:24px;
+    color:#ff1493;
+    font-weight:bold;
+    min-height:40px;
+}
+
+/* CORAZONES */
+.corazon{
+    position:fixed;
+    bottom:-50px;
+    font-size:22px;
+    animation:subir 4s linear forwards;
+    z-index:4;
+}
+
+@keyframes subir{
+    to{
+        transform:translateY(-110vh);
+        opacity:0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+    <div class="image-box">
+        <img src="img/pinguino.jpeg" alt="Pingüinos enamorados">
+    </div>
+
+    <h2>💍 ¿Quieres ser mi San Valentín? 💖</h2>
+
+    <div class="botones">
+        <button onclick="aceptar()">Sí 💖</button>
+        <button id="noBtn">No 😢</button>
+    </div>
+</div>
+
+<div class="rosas-container" id="rosas">
+    <img src="img/rosas.png" alt="Rosas">
+    <div class="mensaje" id="mensaje"></div>
+</div>
+
+<!-- YOUTUBE -->
+<div style="position:absolute; width:0; height:0; overflow:hidden;">
+    <iframe id="ytplayer"
+        width="0"
+        height="0"
+        src=""
+        frameborder="0"
+        allow="autoplay"
+        allowfullscreen>
+    </iframe>
+</div>
+
+<script>
+
+// BOTÓN NO QUE SE MUEVE
+const noBtn = document.getElementById("noBtn");
+
+function moverBoton(){
+    const x = Math.random() * (window.innerWidth - 100);
+    const y = Math.random() * (window.innerHeight - 50);
+    noBtn.style.position = "fixed";
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+}
+
+noBtn.addEventListener("mouseover", moverBoton);
+noBtn.addEventListener("touchstart", moverBoton);
+
+// EFECTO ESCRITURA
+function typeWriter(text, element, speed=70){
+    let i=0;
+    function escribir(){
+        if(i < text.length){
+            element.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(escribir, speed);
+        }
+    }
+    escribir();
+}
+
+// ACEPTAR
+function aceptar(){
+
+    document.getElementById("card").style.display="none";
+
+    const rosas = document.getElementById("rosas");
+    rosas.classList.add("mostrar");
+    document.body.classList.add("activado");
+
+    // Música YouTube
+    const videoID = "x-0KoCAV4mc";
+    document.getElementById("ytplayer").src =
+    "https://www.youtube.com/embed/" + videoID + "?autoplay=1&loop=1&playlist=" + videoID;
+
+    // Texto animado
+    const mensaje = document.getElementById("mensaje");
+    const texto = "💖 ¡Sabía que dirías que sí! 💖";
+    typeWriter(texto, mensaje);
+
+    // Corazones
+    for(let i=0;i<25;i++){
+        let corazon=document.createElement("div");
+        corazon.className="corazon";
+        corazon.innerHTML="💖";
+        corazon.style.left=Math.random()*100+"vw";
+        corazon.style.animationDuration=(3+Math.random()*2)+"s";
+        document.body.appendChild(corazon);
+        setTimeout(()=>{corazon.remove();},5000);
+    }
+}
+
+</script>
+
+</body>
+</html>
